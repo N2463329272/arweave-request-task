@@ -1,8 +1,8 @@
 -- 初始化全局变量
-local CurrentGameState = CurrentGameState or {}
-local ActionInProgress = ActionInProgress or false
-local Logs = Logs or {}
-local Me = nil
+CurrentGameState = CurrentGameState or {}
+ActionInProgress = ActionInProgress or false
+Logs = Logs or {}
+Me = nil
 
 -- 定义颜色用于控制台输出
 local colors = {
