@@ -33,7 +33,6 @@ end
 
 -- 攻击生命值最低的对手
 function attackWeakestOpponent()
-    print(colors.red .. "获取最垃圾的选手" .. colors.reset)
     local weakestOpponent = {}
     local lowestHealth = 200
     if CurrentGameState and CurrentGameState.Players then
@@ -68,10 +67,10 @@ function moveRandomly()
         elseif Me.x - weakestOpponent.x < 0 then
             print(colors.blue .. "向右移动: " .. "Right" .. colors.reset)
             ao.send({Target = Game, Action = "PlayerMove", Player = ao.id, Direction = "Right"})
-        elseif Me.y - weakestOpponent.y then
+        elseif Me.y - weakestOpponent.y > 0 then
             print(colors.blue .. "向下移动: " .. "Down" .. colors.reset)
             ao.send({Target = Game, Action = "PlayerMove", Player = ao.id, Direction = "Down"})
-        elseif Me.y - weakestOpponent.y then
+        elseif Me.y - weakestOpponent.y < 0 then
             print(colors.blue .. "向上移动: " .. "Up" .. colors.reset)
             ao.send({Target = Game, Action = "PlayerMove", Player = ao.id, Direction = "Up"})
         end
