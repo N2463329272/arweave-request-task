@@ -75,10 +75,10 @@ function moveRandomly()
         elseif Me.x - weakestOpponent.x < 0 then
             print(colors.blue .. "向右移动: " .. "Right" .. colors.reset)
             ao.send({Target = Game, Action = "PlayerMove", Player = ao.id, Direction = "Right"})
-        elseif Me.y - weakestOpponent.y then
+        elseif Me.y - weakestOpponent.y > 0 then
             print(colors.blue .. "向下移动: " .. "Down" .. colors.reset)
             ao.send({Target = Game, Action = "PlayerMove", Player = ao.id, Direction = "Down"})
-        elseif Me.y - weakestOpponent.y then
+        elseif Me.y - weakestOpponent.y <0 then
             print(colors.blue .. "向上移动: " .. "Up" .. colors.reset)
             ao.send({Target = Game, Action = "PlayerMove", Player = ao.id, Direction = "Up"})
         end
