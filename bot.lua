@@ -59,7 +59,16 @@ end
 
 -- 往生命值最低选手移动
 function moveRandomly()
-    local weakestOpponent = findWeakestOpponent()
+    local weakestOpponent = {}
+    local lowestHealth = 200
+    if CurrentGameState and CurrentGameState.Players then
+        for target, state in pairs(CurrentGameState.Players) do
+            if target ~= ao.id and state.health < lowestHealth then
+                weakestOpponent = state
+                lowestHealth = state.health
+            end
+        end
+    end
     if weakestOpponent ~= nil and Me ~= nil then
         if Me.x - weakestOpponent.x > 0 then
             print(colors.blue .. "向左移动: " .. "Left" .. colors.reset)
