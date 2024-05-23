@@ -5,7 +5,7 @@ Logs = Logs or {}
 Me = nil
 
 -- 定义颜色用于控制台输出
-local colors = {
+colors = {
     red = "\27[31m", green = "\27[32m", blue = "\27[34m",
     yellow = "\27[33m", purple = "\27[35m", reset = "\27[0m"
 }
@@ -30,26 +30,19 @@ function inRange(weakestOpponent)
     return math.abs(Me.x - weakestOpponent.x) <= 3 and math.abs(Me.y - weakestOpponent.y) <= 3
 end
 
--- 查找生命值最低的对手
-function findWeakestOpponent()
-    local weakestOpponent, lowestHealth = nil, math.huge
-    if CurrentGameState and CurrentGameState.Players then
-        for target, state in pairs(CurrentGameState.Players) do
-            if target ~= ao.id and state.health < lowestHealth then
-                weakestOpponent, lowestHealth = state, state.health
-            end
-        end
-        return weakestOpponent
-    end
-    return nil
-end
 
 -- 攻击生命值最低的对手
 function attackWeakestOpponent()
-    local weakestOpponent = findWeakestOpponent()
-    local json = require("json")
-    if weakestOpponent ~= nil then
-        print("对手信息：" .. json.decode(weakestOpponent))
+    print(colors.red .. "获取最垃圾的选手" .. colors.reset)
+    local weakestOpponent = {}
+    local lowestHealth = 200
+    if CurrentGameState and CurrentGameState.Players then
+        for target, state in pairs(CurrentGameState.Players) do
+            if target ~= ao.id and state.health < lowestHealth then
+                weakestOpponent = state
+                lowestHealth = state.health
+            end
+        end
     end
     if weakestOpponent and inRange(weakestOpponent) then
         local useEnrygy = Me.energy
@@ -75,10 +68,10 @@ function moveRandomly()
         elseif Me.x - weakestOpponent.x < 0 then
             print(colors.blue .. "向右移动: " .. "Right" .. colors.reset)
             ao.send({Target = Game, Action = "PlayerMove", Player = ao.id, Direction = "Right"})
-        elseif Me.y - weakestOpponent.y > 0 then
+        elseif Me.y - weakestOpponent.y then
             print(colors.blue .. "向下移动: " .. "Down" .. colors.reset)
             ao.send({Target = Game, Action = "PlayerMove", Player = ao.id, Direction = "Down"})
-        elseif Me.y - weakestOpponent.y <0 then
+        elseif Me.y - weakestOpponent.y then
             print(colors.blue .. "向上移动: " .. "Up" .. colors.reset)
             ao.send({Target = Game, Action = "PlayerMove", Player = ao.id, Direction = "Up"})
         end
@@ -97,7 +90,7 @@ end
 Handlers.add("PrintAnnouncements", Handlers.utils.hasMatchingTag("Action", "Announcement"), function(msg)
     if msg.Event == "Started-Waiting-Period" then
         ao.send({ Target = ao.id, Action = "AutoPay" })
-    elseif (msg.Event == "Tick" or msg.Event == "Started-Game") and not ActionInProgress then
+    elseif (msg.Event == "Tick" or msg.Event == "Started-Game") then
         ActionInProgress = true
         ao.send({ Target = Game, Action = "GetGameState" })
     end
@@ -129,6 +122,7 @@ Handlers.add("DecideNextAction", Handlers.utils.hasMatchingTag("Action", "Update
         ActionInProgress = false
         return
     end
+    print(colors.yellow .. "查找最差的人..." .. colors.reset)
     decideNextAction()
     ao.send({ Target = ao.id, Action = "Tick" })
 end)
